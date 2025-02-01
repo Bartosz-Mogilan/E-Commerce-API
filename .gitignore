@@ -1,0 +1,12 @@
+# Node modules directory
+node_modules/
+
+# Environment variables file
+.env
+
+# Logs
+logs/
+*.log
+
+# Other files you might want to ignore
+.DS_Store
