@@ -1,5 +1,7 @@
 const pool = require("../config/db");
 
+//Getting all products
+
 exports.getAllProducts = async (req, res) => {
     const { category } = req.query;
     try {
@@ -15,6 +17,8 @@ exports.getAllProducts = async (req, res) => {
     }
 };
 
+//Getting products by specific id
+
 exports.getProductById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -28,6 +32,8 @@ exports.getProductById = async (req, res) => {
     }
 };
 
+//Creating a new product
+
 exports.CreateProduct = async (req, res) => {
     const { name, description, price, stock, category} = req.body;
     try {
@@ -37,6 +43,8 @@ exports.CreateProduct = async (req, res) => {
         res.status(500).json({error: "Error creating product"});
     }
 };
+
+//Updating a product
 
 exports.UpdateProduct = async (req, res) => {
     const { id } = req.params;
@@ -51,6 +59,8 @@ exports.UpdateProduct = async (req, res) => {
         res.status(500).json({error : "Error updating product"});
     }
 };
+
+//Deleting a prodcut
 
 exports.deleteProducts = async (req, res) => {
     const { id } = req.params;

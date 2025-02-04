@@ -2,6 +2,8 @@ const pool = require ("../config/db");
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
 
+//Registering a user
+
 exports.register = async (req, res) => {
     const {username, email, password} = req.body;
     try {
@@ -17,6 +19,8 @@ exports.register = async (req, res) => {
         res.status(500).json({ error: "Error registering user"});
     }
 };
+
+//Loging a user in
 
 exports.login = async (req, res) => {
     const {email, password} = req.body;

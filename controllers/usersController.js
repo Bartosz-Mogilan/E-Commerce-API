@@ -1,5 +1,7 @@
 const pool = require("../config/db");
 
+//Getting all users
+
 exports.getAllUsers = async (req, res) => {
     try {
         const result = await pool.query("SELECT id, username, email, created_at FROM users");
@@ -8,6 +10,8 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).json({error: "Error retrieving users"});
     }
 };
+
+//Getting specific users by id
 
 exports.getUserById = async (req, res) => {
     const { id } = req.params;
@@ -21,6 +25,9 @@ exports.getUserById = async (req, res) => {
         res.status(500).json({error: "Error retrieving user"});
     }
 };
+
+//Updating a user
+
 
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
