@@ -1,8 +1,8 @@
-const pool = require("../config/db");
+import pool from "../config/db.js";
 
 //Getting all orders
 
-exports.getAllOrders = async (req, res) => {
+export const getAllOrders = async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM orders");
         res.json(result.rows);
@@ -13,7 +13,7 @@ exports.getAllOrders = async (req, res) => {
 
 //Getting orders by id
 
-exports.getOrderById = async (req, res) => {
+export const getOrderById = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query("SELECT * FROM orders WHERE id = $1", [id])

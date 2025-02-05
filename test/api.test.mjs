@@ -1,6 +1,7 @@
-const request = require("supertest");
-const { expect } = require("chai");
-const app = require ("../server");
+import request from "supertest";
+import { expect } from "chai";
+import app from "../server.js";
+
 
 describe("E-Commerce API Endpoints", function () {
     this.timeout(5000);
@@ -182,7 +183,7 @@ describe("E-Commerce API Endpoints", function () {
             const res = await request(app)
             .get("/api/v1/products");
             expect(res.status).to.equal(200);
-            expect(res.body).tp.be.an("array");
+            expect(res.body).to.be.an("array");
         });
 
         //Creating a new product
@@ -240,11 +241,11 @@ describe("E-Commerce API Endpoints", function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.be.an("object");
             expect(res.body).to.have.property("id", testProduct.id);
-            expect(res.body).to.have.property("name", updatedData.name);
-            expect(res.body).to.have.property("description", updatedData.description);
-            expect(res.body).to.have.property("price", updatedData.price);
-            expect(res.body).to.have.property("stock", updatedData.stock);
-            expect(res.body).to.have.property("category", updatedData.category);
+            expect(res.body).to.have.property("name", updatedProduct.name);
+            expect(res.body).to.have.property("description", updatedProduct.description);
+            expect(res.body).to.have.property("price", updatedProduct.price);
+            expect(res.body).to.have.property("stock", updatedProduct.stock);
+            expect(res.body).to.have.property("category", updatedProduct.category);
             testProduct = res.body;
         });
 
@@ -264,8 +265,9 @@ describe("E-Commerce API Endpoints", function () {
             const res = await request(app)
             .delete(`/api/v1/products/${testProduct.id}`)
             .set("Authorization", `Bearer ${authToken}`);
-            expect(res.status).to.equal(200);
+            expect(res.status).to.equal(404);
             expect(res.body).to.have.property("error", "Product not found");
         });
     });
 });
+

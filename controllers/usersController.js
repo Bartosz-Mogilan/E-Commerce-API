@@ -1,8 +1,8 @@
-const pool = require("../config/db");
+import pool from "../config/db.js";
 
 //Getting all users
 
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
     try {
         const result = await pool.query("SELECT id, username, email, created_at FROM users");
         res.json(result.rows);
@@ -13,7 +13,7 @@ exports.getAllUsers = async (req, res) => {
 
 //Getting specific users by id
 
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query ("SELECT id, username, email, created_at FROM users WHERE id = $1", [id]);
@@ -29,7 +29,7 @@ exports.getUserById = async (req, res) => {
 //Updating a user
 
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     const { id } = req.params;
     const {username, email} = req.body;
     try {

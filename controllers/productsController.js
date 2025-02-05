@@ -1,13 +1,13 @@
-const pool = require("../config/db");
+import pool from "../config/db.js";
 
 //Getting all products
 
-exports.getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
     const { category } = req.query;
     try {
         let result;
         if (category) {
-            result = await pool.query("SELECT * FROM prodcuts WHERE category = $1", [category]);
+            result = await pool.query("SELECT * FROM products WHERE category = $1", [category]);
         } else {
             result = await pool.query("SELECT * FROM products");
         }
@@ -19,7 +19,7 @@ exports.getAllProducts = async (req, res) => {
 
 //Getting products by specific id
 
-exports.getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
@@ -34,10 +34,10 @@ exports.getProductById = async (req, res) => {
 
 //Creating a new product
 
-exports.CreateProduct = async (req, res) => {
+export const CreateProduct = async (req, res) => {
     const { name, description, price, stock, category} = req.body;
     try {
-        const result = await pool.query("INSERT INTO prodcuts (name, description, price, stock, category) VALUES ($1, $2, $3, $4, $5) RETURNING *", [name, description, price, stock, category]);
+        const result = await pool.query("INSERT INTO products (name, description, price, stock, category) VALUES ($1, $2, $3, $4, $5) RETURNING *", [name, description, price, stock, category]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({error: "Error creating product"});
@@ -46,7 +46,7 @@ exports.CreateProduct = async (req, res) => {
 
 //Updating a product
 
-exports.UpdateProduct = async (req, res) => {
+export const UpdateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, category} = req.body;
     try {
@@ -62,7 +62,7 @@ exports.UpdateProduct = async (req, res) => {
 
 //Deleting a prodcut
 
-exports.deleteProducts = async (req, res) => {
+export const deleteProducts = async (req, res) => {
     const { id } = req.params;
     try {
         result = await pool.query("DELETE FROM products WHERE id = $1", [id]);

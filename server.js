@@ -1,6 +1,6 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
+import express from "express";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -14,11 +14,11 @@ app.use(bodyParser.json());
 
 //Routes
 
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/users");
-const productRoutes = require("./routes/products");
-const cartRoutes = require("./routes/cart");
-const orderRoutes = require("./routes/orders");
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import productRoutes from "./routes/products.js";
+import cartRoutes from "./routes/cart.js";
+import orderRoutes from "./routes/orders.js";
 
 //Using the routes
 
@@ -31,10 +31,11 @@ app.use("/api/v1/orders", orderRoutes);
 //Default route
 
 app.get('/', (req, res) => {
-    res.send("Hello, E Commerce API");
+    res.send("Welcome to the E-Commerce API");
 });
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+export default app;
