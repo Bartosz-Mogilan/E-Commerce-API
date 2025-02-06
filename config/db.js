@@ -1,32 +1,42 @@
-import pkg from "pg";
+import { Pool } from "pkg";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const { Pool } = pkg;
+
+//Identifying is any environmental variable is missing
+
+const requiredVars = ['DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
+requiredVars.forEach((key) => {
+    if(!process.env[key]) {
+        console.error(`Missing a required environment variable : ${key}`);
+        process.exit(1);
+    }
+});
+
+//Creating a connection pool
 
 const pool = new Pool ({
 user: process.env.DB_USER,
 host: process.env.DB_HOST,
 database: process.env.DB_NAME,
 password: process.env.DB_PASSWORD,
-port: parseInt(process.env.DB_PORT, 10)
+port: parseInt(process.env.DB_PORT, 10),
 });
 
-//Catching errors
+//Testing database connection
 
-pool.connect((err, client, release) => {
-    if (err) {
-        return console.error ("Error acquiring client", err.stack);
+(async () => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query("SELECT NOW()");
+        console.log("Connected to PostgreSQL at", result.rows[0].now);
+        client.release();
+    } catch (err) {
+        console.error("Database connection error", err.stack);
+        process.exit(1);
     }
-    client.query("Select NOW()", (err, result) => {
-        release();
-        if (err) {
-            return console.error("Error executing query", err.stack);
-        }
-        console.log("Connected to PostgresSQL at", result.rows[0].now);
-    });
-});
+})();
 
 export default pool;
 

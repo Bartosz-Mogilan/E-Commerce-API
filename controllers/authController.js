@@ -1,13 +1,18 @@
-import pool from ("../config/db.js");
+import pool from "../config/db.js";
 import bcrypt from "bcrypt";
-import jwt from jsonwebtoken;
+import jwt from "jsonwebtoken";
 
 //Registering a user
 
 export const register = async (req, res) => {
     const {username, email, password} = req.body;
+
+    if(!username || !email || !password) {
+        return res.status(400).json({error: "All fields (username, email, password) are required."});
+    }
+
     try {
-        const userExists = await pool.query("SELECT * FROM user WHERE email = $1", [email]);
+        const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
         if (userExists.rows.length > 0) {
             return res.status(400).json({ error: "User already exists"});
         }
@@ -25,20 +30,26 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const {email, password} = req.body;
+
+    if(!email || !password) {
+        return res.status(400).json({error: "Email and password are required"});
+    }
+
     try {
         const userResult = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
         if (userResult.rows.length === 0) {
             return res.status(400).json({error: "Invalid credentials"});
         }
+
         const user = userResult.rows[0];
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({error: "Invalid credentials"});
         }
         const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: "1h"});
-        res.json({token});
+        res.json({ token });
     } catch (error) {
-        console.error(error);
+        console.error("Error logging in", error);
         res.status(500).json({error: "Error logging in"});
     }
 };

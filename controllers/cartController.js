@@ -21,9 +21,9 @@ export const getCartById = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({error : "Cart not found"});
         }
-        res.json(result.rows);
+        res.json(result.rows[0]);
     } catch (error) {
-        res.status(500).json({error : "Erro retrieving cart"});
+        res.status(500).json({error : "Error retrieving cart"});
     }
 };
 
@@ -32,21 +32,31 @@ export const getCartById = async (req, res) => {
 export const checkoutCart = async (req, res) => {
     const { cartId } = req.params;
     try {
-      const cartResult = await pool.query("SELECT * FROM carts WHERE id = $1", [cartId]);
+      const cartResult = await pool.query(
+        `SELECT c.*, p.price
+        FROM carts c
+        JOIN products p ON c.product_id = p.id
+        WHERE c.id = $1`, 
+        [cartId]
+      );
+
       if (cartResult.rows.length === 0) {
         return res.status(404).json({ error: "Cart not found" });
       }
+
       const cartItems = cartResult.rows;
       
       let total_price = 0;
-     
       cartItems.forEach(item => {
-        total_price += item.quantity;
+        total_price += item.quantity * item.price;
       });
+
+
       const orderResult = await pool.query(
         "INSERT INTO orders (user_id, total_price) VALUES ($1, $2) RETURNING *",
         [cartItems[0].user_id, total_price]
       );
+      
       await pool.query("DELETE FROM carts WHERE id = $1", [cartId]);
   
       res.status(201).json({ message: "Checkout successful", order: orderResult.rows[0] });
