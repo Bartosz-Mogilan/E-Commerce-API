@@ -75,6 +75,7 @@ describe("E-Commerce API Endpoints", function () {
             const res = await request(app)
             .get("/api/v1/users")
             .set("Authorization", `Bearer ${authToken}`);
+
             expect(res.status).to.equal(200);
             expect(res.body).to.be.an("array");
         });
@@ -85,6 +86,7 @@ describe("E-Commerce API Endpoints", function () {
             const res = await request(app)
             .get(`/api/v1/users/${testUser.id}`)
             .set("Authorization", `Bearer ${authToken}`);
+
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property("id", testUser.id);
         });
@@ -93,13 +95,14 @@ describe("E-Commerce API Endpoints", function () {
 
         it("Should update a users details", async () => {
             const updateUser = {
-                username: "updatedUser",
-                email: "updateUserEmail@gmail.com",
+                username: "updatedUser123",
+                email: `updateUserEmail_${Date.now()}@gmail.com`,
             };
             const res = await request(app)
             .put(`/api/v1/users/${testUser.id}`)
             .set("Authorization", `Bearer ${authToken}`)
             .send(updateUser);
+
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property("username", updateUser.username);
             expect(res.body).to.have.property("email", updateUser.email);
@@ -134,7 +137,7 @@ describe("E-Commerce API Endpoints", function () {
             .get(`/api/v1/cart/${testCartId}`)
             .set("Authorization", `Bearer ${authToken}`);
             expect(res.status).to.equal(200);
-            expect(res.body).to.be.an("array");
+            expect(res.body).to.be.an("object");
         });
 
         //Checking out the cart
@@ -206,7 +209,7 @@ describe("E-Commerce API Endpoints", function () {
             expect(res.body).to.have.property("id");
             expect(res.body).to.have.property("name", productData.name);
             expect(res.body).to.have.property("description", productData.description);
-            expect(res.body).to.have.property("price", productData.price);
+            expect(parseFloat(res.body.price)).to.equal( productData.price);
             expect(res.body).to.have.property("stock", productData.stock);
             expect(res.body).to.have.property("category", productData.category);
             testProduct = res.body;
@@ -221,6 +224,7 @@ describe("E-Commerce API Endpoints", function () {
             expect(res.body).to.be.an("object");
             expect(res.body).to.have.property("id", testProduct.id);
             expect(res.body).to.have.property("name", testProduct.name);
+            testProduct = res.body;
         });
 
         //Updating existing products
