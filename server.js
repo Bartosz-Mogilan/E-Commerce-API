@@ -34,6 +34,20 @@ app.get('/', (req, res) => {
     res.send("Welcome to the E-Commerce API");
 });
 
+//Swagger Setup
+
+//Importing Swagger Libraries
+
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerOptions from "./swaggerOptions.js";
+
+//Swagger specification
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
