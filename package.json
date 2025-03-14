@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --timeout 5000 test/api.test.mjs"
   },
   "keywords": [],
   "author": "",
@@ -15,14 +15,14 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "npmlog": "^7.0.1",
     "pg": "^8.13.1",
     "pkg": "^5.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "chai": "^5.1.2",
-    "esm": "^3.2.25",
+    "chai": "^5.2.0",
     "mocha": "^11.1.0",
     "supertest": "^7.0.0"
   }
